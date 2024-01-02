@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_storage/model/my_models.dart';
+import 'package:flutter_storage/services/secure_storage.dart';
 import 'package:flutter_storage/services/shared_pref_service.dart';
 
 class SharedPreferenceKullanimi extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SharedPreferenceKullanimiState extends State<SharedPreferenceKullanimi> {
   var _secilenRenkler = <String>[];
   var _ogrenciMi = false;
   final TextEditingController _nameController = TextEditingController();
-  final _preferenceService = SharedPreferenceService();
+  final _preferenceService = SecureStorageService();
   @override
   void initState() {
     super.initState();
