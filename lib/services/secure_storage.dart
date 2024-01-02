@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_storage/model/my_models.dart';
@@ -7,7 +9,7 @@ class SecureStorageService {
 
   // Constructor içerisinde preferences değişkenini başlatın.
   SecureStorageService() {
-    preferences = FlutterSecureStorage();
+    preferences = const FlutterSecureStorage();
   }
 
   Future<void> verileriKaydet(UserInformation userInformation) async {
