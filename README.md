@@ -1,6 +1,6 @@
 # flutter_storage
 
-A new Flutter project.
+In this project series I'm gonna work on storage types.
 
 ## Getting Started
 
