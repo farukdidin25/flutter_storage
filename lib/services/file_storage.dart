@@ -8,28 +8,35 @@ import 'package:flutter_storage/model/my_models.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FileStorageService {
-
-  _getFilePath()async{
+  _getFilePath() async {
     var filePath = await getApplicationDocumentsDirectory();
     debugPrint(filePath.path);
     return filePath.path;
   }
-  FileStorageService(){
+
+  FileStorageService() {
     _createFile();
   }
 
-  _createFile()async{
+  Future<File> _createFile() async {
     var file = File(await _getFilePath() + "/info.json");
-    await file.writeAsString("deneme içerik");
+    return file;
   }
 
-  Future<void> verileriKaydet(UserInformation userInformation) async {
-    
+  void verileriKaydet(UserInformation userInformation) async {
+    var file = await _createFile();
+    await file.writeAsString(jsonEncode(userInformation));
   }
 
   Future<UserInformation> verileriOku() async {
-    
-    return UserInformation("a", Cinsiyet.ERKEK, ["SARI"], false);
-    
+    try {
+      var file = await _createFile();
+      var dosyaStringIcerik = await file.readAsString();
+      var json = jsonDecode(dosyaStringIcerik);
+      return UserInformation.fromJson(json);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return UserInformation("", Cinsiyet.ERKEK, [], false);
   }
 }
