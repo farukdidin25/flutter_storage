@@ -1,8 +1,16 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_storage/services/secure_storage.dart';
+import 'package:get_it/get_it.dart';
 
 import 'shared_pref_kullanimi.dart';
 
 
+final locator = GetIt.instance;
+void setup(){
+  locator.registerSingleton<SecureStorageService>(SecureStorageService( ));
+}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
