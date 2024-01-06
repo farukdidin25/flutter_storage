@@ -1,20 +1,19 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_storage/services/local_storage_service.dart';
 import 'package:flutter_storage/services/secure_storage.dart';
 import 'package:get_it/get_it.dart';
-
 import 'shared_pref_kullanimi.dart';
 
-
 final locator = GetIt.instance;
-void setup(){
-  locator.registerSingleton<SecureStorageService>(SecureStorageService( ));
+
+void setup() {
+  //locator.registerSingleton<LocalStorageService>(SharedPreferenceService());
+  locator.registerLazySingleton<LocalStrorageService>(()=> SecureStorageService());
 }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  setup();
   runApp(const MyApp());
 }
 
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Flutter Storage',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -40,7 +38,6 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         title: const Text('Flutter Storage Islemleri'),
       ),
@@ -56,8 +53,8 @@ class MyHomePage extends StatelessWidget {
                         builder: (context) =>
                             const SharedPreferenceKullanimi()));
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
               child: const Text('Shared Preference / Secure Storage Kullanımı'),
+              style: ElevatedButton.styleFrom(primary: Colors.red),
             )
           ],
         ),

@@ -1,16 +1,12 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_storage/main.dart';
 import 'package:flutter_storage/model/my_models.dart';
-import 'package:flutter_storage/services/file_storage.dart';
-import 'package:flutter_storage/services/local_storage_service.dart';
-import 'package:flutter_storage/services/secure_storage.dart';
-// ignore: unused_import
-import 'package:flutter_storage/services/shared_pref_service.dart';
+
+import 'services/local_storage_service.dart';
 
 class SharedPreferenceKullanimi extends StatefulWidget {
-  const SharedPreferenceKullanimi({super.key});
+  const SharedPreferenceKullanimi({Key? key}) : super(key: key);
 
   @override
   State<SharedPreferenceKullanimi> createState() =>
@@ -22,34 +18,37 @@ class _SharedPreferenceKullanimiState extends State<SharedPreferenceKullanimi> {
   var _secilenRenkler = <String>[];
   var _ogrenciMi = false;
   final TextEditingController _nameController = TextEditingController();
-  final LocalStrorageService _preferenceService = SecureStorageService();
-  //final LocalStrorageService _preferenceService2 = SharedPreferenceService();
-  //final LocalStrorageService _preferenceService3 = FileStorageService();
+  final LocalStrorageService _preferenceService = locator<LocalStrorageService>();
+  /* final LocalStorageService _preferenceService2 = SharedPreferenceService();
+  final LocalStorageService _preferenceService3 = FileStorageService(); */
+
   @override
   void initState() {
     super.initState();
     _verileriOku();
+      
   }
 
   @override
   Widget build(BuildContext context) {
+ 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shared Preference Kullanımı'),
+        title: const Text('SharedPreference Kullanımı'),
       ),
       body: ListView(
         children: [
           ListTile(
             title: TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: "Adınızı Giriniz !"),
+              decoration: const InputDecoration(labelText: 'Adınızı Giriniz'),
             ),
           ),
           for (var item in Cinsiyet.values)
             _buildRadioListTiles(describeEnum(item), item),
           for (var item in Renkler.values) _buildCheckboxListTiles(item),
           SwitchListTile(
-              title: const Text("Öğrenci Misin ?"),
+              title: const Text('Öğrenci Misin ? '),
               value: _ogrenciMi,
               onChanged: (bool ogrenciMi) {
                 setState(() {
@@ -57,10 +56,13 @@ class _SharedPreferenceKullanimiState extends State<SharedPreferenceKullanimi> {
                 });
               }),
           TextButton(
-              onPressed:() {
-                var _userInformation = UserInformation(_nameController.text, _secilenCinsiyet, _secilenRenkler, _ogrenciMi);
-                _preferenceService.verileriKaydet(_userInformation);},
-              child: const Text("Kaydet !"))
+              onPressed: () {
+                var _userInformation = UserInformation(_nameController.text,
+                    _secilenCinsiyet, _secilenRenkler, _ogrenciMi);
+
+                _preferenceService.verileriKaydet(_userInformation);
+              },
+              child: const Text('Kaydet'))
         ],
       ),
     );
@@ -83,24 +85,23 @@ class _SharedPreferenceKullanimiState extends State<SharedPreferenceKullanimi> {
 
   Widget _buildRadioListTiles(String title, Cinsiyet cinsiyet) {
     return RadioListTile(
-        title: Text(title),
-        value: cinsiyet,
-        groupValue: _secilenCinsiyet,
-        onChanged: (Cinsiyet? secilmisCinsiyet) {
-          setState(() {
-            _secilenCinsiyet = secilmisCinsiyet!;
-          });
+      title: Text(title),
+      value: cinsiyet,
+      groupValue: _secilenCinsiyet,
+      onChanged: (Cinsiyet? secilmisCinsiyet) {
+        setState(() {
+          _secilenCinsiyet = secilmisCinsiyet!;
         });
+      },
+    );
   }
-  
+
   void _verileriOku() async {
     var info = await _preferenceService.verileriOku();
     _nameController.text = info.isim;
     _secilenCinsiyet = info.cinsiyet;
     _secilenRenkler = info.renkler;
     _ogrenciMi = info.ogrenciMi;
-    setState(() {
-      
-    });
+    setState(() {});
   }
 }
